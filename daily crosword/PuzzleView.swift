@@ -97,31 +97,40 @@ struct PuzzleView: View {
                 // Action buttons
                 HStack(spacing: 18) {
                     Button(action: { viewModel.validate() }) {
-                        Label("Validate", systemImage: "checkmark.seal.fill")
-                            .font(.system(size: 17, weight: .bold, design: .rounded))
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 18)
-                            .background(Capsule().fill(Color.accentColor))
-                            .foregroundColor(.white)
-                            .shadow(color: Color.accentColor.opacity(0.13), radius: 3, x: 0, y: 1)
+                        VStack(spacing: 4) {
+                            Image(systemName: "checkmark.seal.fill")
+                                .font(.system(size: 22, weight: .bold))
+                            Text("Validate")
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        }
+                        .frame(width: 60, height: 60)
+                        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.accentColor))
+                        .foregroundColor(.white)
+                        .shadow(color: Color.accentColor.opacity(0.13), radius: 3, x: 0, y: 1)
                     }
                     Button(action: { viewModel.solve() }) {
-                        Label("Solve", systemImage: "lightbulb.fill")
-                            .font(.system(size: 17, weight: .bold, design: .rounded))
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 18)
-                            .background(Capsule().fill(Color.purple))
-                            .foregroundColor(.white)
-                            .shadow(color: Color.purple.opacity(0.13), radius: 3, x: 0, y: 1)
+                        VStack(spacing: 4) {
+                            Image(systemName: "lightbulb.fill")
+                                .font(.system(size: 22, weight: .bold))
+                            Text("Solve")
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        }
+                        .frame(width: 60, height: 60)
+                        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.purple))
+                        .foregroundColor(.white)
+                        .shadow(color: Color.purple.opacity(0.13), radius: 3, x: 0, y: 1)
                     }
                     Button(action: { viewModel.clear() }) {
-                        Label("Clear", systemImage: "eraser.fill")
-                            .font(.system(size: 17, weight: .bold, design: .rounded))
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 18)
-                            .background(Capsule().fill(Color.gray.opacity(0.7)))
-                            .foregroundColor(.white)
-                            .shadow(color: Color.gray.opacity(0.13), radius: 3, x: 0, y: 1)
+                        VStack(spacing: 4) {
+                            Image(systemName: "eraser.fill")
+                                .font(.system(size: 22, weight: .bold))
+                            Text("Clear")
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        }
+                        .frame(width: 60, height: 60)
+                        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.gray.opacity(0.7)))
+                        .foregroundColor(.white)
+                        .shadow(color: Color.gray.opacity(0.13), radius: 3, x: 0, y: 1)
                     }
                 }
                 .padding(.vertical, 12)

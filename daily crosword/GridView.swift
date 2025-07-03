@@ -90,10 +90,13 @@ struct GridCellView: View, Equatable {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Rectangle()
-                .fill(isBlack ? Color.gray : (isCorrect ? Color.green.opacity(0.5) : (isIncorrect ? Color.red.opacity(0.5) : Color.white)))
+            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                .fill(
+                    isBlack ? Color.purple :
+                    (isCorrect ? Color.green.opacity(0.5) :
+                    (isIncorrect ? Color.red.opacity(0.5) : Color(.systemGray6)))
+                )
                 .frame(width: 32, height: 32)
-                .border(Color.black, width: 0.5)
             if !isBlack {
                 let cellFocus = CellPosition(row: row, col: col)
                 TextField("", text: $text)
