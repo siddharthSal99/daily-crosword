@@ -21,12 +21,12 @@ struct PuzzleView: View {
                         onCellTap: { row, col in viewModel.selectCell(row: row, col: col) },
                         onLetterInput: { row, col, letter in
                             viewModel.updateCell(row: row, col: col, letter: letter)
-                            if let next = viewModel.nextAcrossCell(from: CellPosition(row: row, col: col)) {
+                            if let next = viewModel.nextCell(from: CellPosition(row: row, col: col)) {
                                 viewModel.selectedCell = next
                             }
                         },
                         onBackspace: { row, col in
-                            if let prev = viewModel.previousAcrossCell(from: CellPosition(row: row, col: col)) {
+                            if let prev = viewModel.previousCell(from: CellPosition(row: row, col: col)) {
                                 viewModel.selectedCell = prev
                             }
                         },

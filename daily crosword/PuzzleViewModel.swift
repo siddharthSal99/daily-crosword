@@ -132,6 +132,50 @@ class PuzzleViewModel: ObservableObject {
         }
         return nil
     }
+
+    func nextCell(from cell: CellPosition) -> CellPosition? {
+        switch direction {
+        case .across:
+            return nextAcrossCell(from: cell)
+        case .down:
+            return nextDownCell(from: cell)
+        }
+    }
+
+    func previousCell(from cell: CellPosition) -> CellPosition? {
+        switch direction {
+        case .across:
+            return previousAcrossCell(from: cell)
+        case .down:
+            return previousDownCell(from: cell)
+        }
+    }
+
+    func nextDownCell(from cell: CellPosition) -> CellPosition? {
+        let row = cell.row
+        let col = cell.col
+        var nextRow = row + 1
+        while nextRow < puzzle.grid.count {
+            if puzzle.grid[nextRow][col] != "." {
+                return CellPosition(row: nextRow, col: col)
+            }
+            nextRow += 1
+        }
+        return nil
+    }
+
+    func previousDownCell(from cell: CellPosition) -> CellPosition? {
+        let row = cell.row
+        let col = cell.col
+        var prevRow = row - 1
+        while prevRow >= 0 {
+            if puzzle.grid[prevRow][col] != "." {
+                return CellPosition(row: prevRow, col: col)
+            }
+            prevRow -= 1
+        }
+        return nil
+    }
 }
 
 // Safe array subscript
