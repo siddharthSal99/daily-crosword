@@ -11,7 +11,7 @@ import SwiftUI
 struct daily_croswordApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
         }
     }
 }

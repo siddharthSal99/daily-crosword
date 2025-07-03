@@ -1,0 +1,9 @@
+I am making an IOS crossword puzzle app. The app will have two screens.
+
+1. The home screen will list the puzzles retrieved from the foracross api. You can see example request and responses in the tagged files under the api-examples folder.
+These retrieve individual pages of crossword puzzles. There is a search bar where you can text search for puzzles as well - this is detailed in the with-search-term-get-puzzles.json file.
+The search term in that case was "NY Times". The list of puzzles should just show the name, date published and the author of the puzzles. 
+When I scroll to the end of the page, it should automatically request for the next page of puzzles and populate the list.
+Clicking on any of the puzzles in the list should take me to screen 2
+
+2. This screen displays the puzzle, the grid and the clues. You can click on squares in the grid and it shows you the associated down and across clues if they exist. It pops up the keyboard for you to type in letters to fill in the grid. There is a button to validate the puzzle and it checks your solution against the actual solution and highlights squares that are wrong. There is a solve puzzle button that fills in the grid with the given solution and highlights squares that you got wrong. There is a clear puzzle button that allows you to restart the puzzle.
