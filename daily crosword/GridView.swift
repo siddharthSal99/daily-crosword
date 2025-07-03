@@ -45,6 +45,12 @@ struct GridView: View {
                                     .multilineTextAlignment(.center)
                                     .frame(width: 32, height: 32)
                                     .background(Color.clear)
+                                    .onChange(of: userGrid[row][col]) { newValue in
+                                        let lastChar = newValue.last.map { String($0).uppercased() } ?? ""
+                                        if userGrid[row][col] != lastChar {
+                                            userGrid[row][col] = lastChar
+                                        }
+                                    }
                                     .simultaneousGesture(TapGesture().onEnded { onCellTap(row, col) })
                                 if let number = clueNumbers[row][col] {
                                     Text("\(number)")
