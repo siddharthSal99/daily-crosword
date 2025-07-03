@@ -45,7 +45,7 @@ struct GridView: View {
                                     .multilineTextAlignment(.center)
                                     .frame(width: 32, height: 32)
                                     .background(Color.clear)
-                                    .onTapGesture { onCellTap(row, col) }
+                                    .simultaneousGesture(TapGesture().onEnded { onCellTap(row, col) })
                                 if let number = clueNumbers[row][col] {
                                     Text("\(number)")
                                         .font(.system(size: 9))
@@ -56,7 +56,7 @@ struct GridView: View {
                             }
                         }
                         .contentShape(Rectangle())
-                        .onTapGesture { onCellTap(row, col) }
+                        .onTapGesture { if !isBlack { onCellTap(row, col) } }
                     }
                 }
             }
