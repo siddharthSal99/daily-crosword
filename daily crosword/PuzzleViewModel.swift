@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 class PuzzleViewModel: ObservableObject {
@@ -12,12 +13,26 @@ class PuzzleViewModel: ObservableObject {
     @Published var solvedCells: Set<[Int]> = []
     @Published var cellToClues: [[(across: Int?, down: Int?)]] = []
 
+    private var cancellables = Set<AnyCancellable>()
+
     enum Direction { case across, down }
 
     init(puzzle: PuzzleDetail) {
         self.puzzle = puzzle
-        self.userGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : "" } }
+        let key = "userGrid-\(puzzle.name)"
+        if let saved = UserDefaults.standard.object(forKey: key) as? [[String]], saved.count == puzzle.grid.count {
+            self.userGrid = saved
+        } else {
+            self.userGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : "" } }
+        }
         self.cellToClues = PuzzleViewModel.computeCellClueMap(grid: puzzle.grid)
+        // Observe userGrid changes to persist
+        $userGrid
+            .sink { [weak self] newGrid in
+                guard let self = self else { return }
+                UserDefaults.standard.set(newGrid, forKey: key)
+            }
+            .store(in: &cancellables)
     }
 
     static func computeCellClueMap(grid: [[String]]) -> [[(across: Int?, down: Int?)]] {
