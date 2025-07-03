@@ -63,23 +63,34 @@ struct PuzzleView: View {
                 // Show clues for selected cell
                 if let selected = viewModel.selectedCell {
                     let clues = viewModel.cellToClues[selected.row][selected.col]
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 2) {
                         if let acrossNum = clues.across, let acrossText = viewModel.puzzle.clues.across[safe: acrossNum], let text = acrossText {
-                            Text("Across (\(acrossNum)): \(text)")
-                                .font(viewModel.direction == .across ? .title3.bold() : .headline)
-                                .foregroundColor(.accentColor)
+                            let label = Text("Across (")
+                            let number = Text("\(acrossNum)").bold()
+                            let colon = Text("): ")
+                            let clue = Text(text)
+                            let full = label + number + colon + clue
+                            Group {
+                                full
+                                    .font(viewModel.direction == .across ? .title3.bold() : .headline)
+                                    .foregroundColor(viewModel.direction == .across ? .accentColor : .primary)
+                            }
                         }
                         if let downNum = clues.down, let downText = viewModel.puzzle.clues.down[safe: downNum], let text = downText {
-                            Text("Down (\(downNum)): \(text)")
-                                .font(viewModel.direction == .down ? .title3.bold() : .headline)
-                                .foregroundColor(.accentColor)
+                            let label = Text("Down (")
+                            let number = Text("\(downNum)").bold()
+                            let colon = Text("): ")
+                            let clue = Text(text)
+                            let full = label + number + colon + clue
+                            Group {
+                                full
+                                    .font(viewModel.direction == .down ? .title3.bold() : .headline)
+                                    .foregroundColor(viewModel.direction == .down ? .accentColor : .primary)
+                            }
                         }
                     }
-                    .padding(.vertical, 8)
-                    .padding(.horizontal)
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 2)
+                    .padding(.horizontal, 4)
                 }
 
                 // Action buttons
