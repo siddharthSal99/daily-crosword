@@ -8,7 +8,7 @@ struct CellPosition: Equatable, Hashable {
 
 struct GridView: View {
     let grid: [[String]]
-    @Binding var userGrid: [[String]]
+    var userCellGrid: [[GridCellModel]]
     @Binding var selectedCell: CellPosition?
     var onCellTap: (Int, Int) -> Void
     var onLetterInput: ((Int, Int, String) -> Void)? = nil
@@ -54,7 +54,7 @@ struct GridView: View {
                             isCorrect: isCorrect,
                             isIncorrect: isIncorrect,
                             clueNumber: clueNumber,
-                            text: $userGrid[row][col],
+                            cell: userCellGrid[row][col],
                             selectedCell: $selectedCell,
                             focusedCell: _focusedCell,
                             onCellTap: onCellTap,
@@ -77,7 +77,7 @@ struct GridCellView: View, Equatable {
     let isCorrect: Bool
     let isIncorrect: Bool
     let clueNumber: Int?
-    @Binding var text: String
+    @ObservedObject var cell: GridCellModel
     @Binding var selectedCell: CellPosition?
     @FocusState var focusedCell: CellPosition?
     var onCellTap: (Int, Int) -> Void
@@ -85,7 +85,14 @@ struct GridCellView: View, Equatable {
     var onBackspace: ((Int, Int) -> Void)?
 
     static func == (lhs: GridCellView, rhs: GridCellView) -> Bool {
-        lhs.row == rhs.row && lhs.col == rhs.col && lhs.text == rhs.text && lhs.selectedCell == rhs.selectedCell && lhs.isBlack == rhs.isBlack && lhs.isCorrect == rhs.isCorrect && lhs.isIncorrect == rhs.isIncorrect && lhs.clueNumber == rhs.clueNumber
+        lhs.row == rhs.row &&
+        lhs.col == rhs.col &&
+        lhs.cell.value == rhs.cell.value &&
+        lhs.selectedCell == rhs.selectedCell &&
+        lhs.isBlack == rhs.isBlack &&
+        lhs.isCorrect == rhs.isCorrect &&
+        lhs.isIncorrect == rhs.isIncorrect &&
+        lhs.clueNumber == rhs.clueNumber
     }
 
     var body: some View {
@@ -99,31 +106,25 @@ struct GridCellView: View, Equatable {
                 .frame(width: 32, height: 32)
             if !isBlack {
                 let cellFocus = CellPosition(row: row, col: col)
-                TextField("", text: $text)
+                TextField("", text: $cell.value)
                     .multilineTextAlignment(.center)
                     .frame(width: 32, height: 32)
                     .background(Color.clear)
                     .focused($focusedCell, equals: cellFocus)
                     .onChange(of: selectedCell) { newSelected in
-                        let shouldFocus: Bool
-                        if let sel = newSelected {
-                            shouldFocus = (sel.row == row && sel.col == col)
-                        } else {
-                            shouldFocus = false
-                        }
+                        let shouldFocus = (newSelected?.row == row && newSelected?.col == col)
                         if shouldFocus {
                             focusedCell = cellFocus
                         }
                     }
-                    .onChange(of: text) { newValue in
+                    .onChange(of: cell.value) { newValue in
                         let lastChar = newValue.last.map { String($0).uppercased() } ?? ""
-                        if text != lastChar {
-                            text = lastChar
+                        if cell.value != lastChar {
+                            cell.value = lastChar
                         }
                         if !lastChar.isEmpty {
                             onLetterInput?(row, col, lastChar)
                         } else if newValue.isEmpty {
-                            // Only move if already empty, do not clear
                             onBackspace?(row, col)
                         }
                     }

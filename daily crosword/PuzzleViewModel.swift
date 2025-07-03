@@ -2,10 +2,16 @@ import Foundation
 import SwiftUI
 import Combine
 
+class GridCellModel: ObservableObject {
+    @Published var value: String
+    init(_ value: String) { self.value = value }
+}
+
 @MainActor
 class PuzzleViewModel: ObservableObject {
     let puzzle: PuzzleDetail
     @Published var userGrid: [[String]]
+    @Published var userCellGrid: [[GridCellModel]]
     @Published var selectedCell: CellPosition?
     @Published var direction: Direction = .across
     @Published var incorrectCells: Set<[Int]> = []
@@ -31,11 +37,14 @@ class PuzzleViewModel: ObservableObject {
     init(puzzle: PuzzleDetail) {
         self.puzzle = puzzle
         let key = "userGrid-\(puzzle.name)"
+        let initialGrid: [[String]]
         if let saved = UserDefaults.standard.object(forKey: key) as? [[String]], saved.count == puzzle.grid.count {
-            self.userGrid = saved
+            initialGrid = saved
         } else {
-            self.userGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : "" } }
+            initialGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : "" } }
         }
+        self.userGrid = initialGrid
+        self.userCellGrid = initialGrid.map { row in row.map { GridCellModel($0) } }
         self.cellToClues = PuzzleViewModel.computeCellClueMap(grid: puzzle.grid)
         // Observe userGrid changes to persist
         $userGrid
@@ -204,6 +213,14 @@ class PuzzleViewModel: ObservableObject {
             prevRow -= 1
         }
         return nil
+    }
+
+    func getCellValue(row: Int, col: Int) -> String {
+        userCellGrid[row][col].value
+    }
+
+    func setCellValue(row: Int, col: Int, value: String) {
+        userCellGrid[row][col].value = value
     }
 }
 

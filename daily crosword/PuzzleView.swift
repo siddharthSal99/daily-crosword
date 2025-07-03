@@ -33,7 +33,7 @@ struct PuzzleView: View {
                 ScrollView([.horizontal, .vertical]) {
                     GridView(
                         grid: viewModel.puzzle.grid,
-                        userGrid: $viewModel.userGrid,
+                        userCellGrid: viewModel.userCellGrid,
                         selectedCell: $viewModel.selectedCell,
                         onCellTap: viewModel.selectCell,
                         onLetterInput: { row, col, letter in
