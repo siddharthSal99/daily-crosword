@@ -1,9 +1,13 @@
 import SwiftUI
+import Combine
 
 struct PuzzleView: View {
     @StateObject private var viewModel: PuzzleViewModel
     @FocusState private var isInputFocused: Bool
     @State private var inputLetter: String = ""
+    @State private var isKeyboardVisible: Bool = false
+    private let keyboardWillShow = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+    private let keyboardWillHide = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
 
     init(puzzle: PuzzleDetail) {
         _viewModel = StateObject(wrappedValue: PuzzleViewModel(puzzle: puzzle))
@@ -94,61 +98,65 @@ struct PuzzleView: View {
                     .padding(.horizontal, 4)
                 }
 
-                // Action buttons
-                HStack(spacing: 18) {
-                    Button(action: { viewModel.validate() }) {
-                        VStack(spacing: 4) {
-                            Image(systemName: "checkmark.seal.fill")
-                                .font(.system(size: 22, weight: .bold))
-                            Text("Validate")
-                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                if !isKeyboardVisible {
+                    // Action buttons
+                    HStack(spacing: 18) {
+                        Button(action: { viewModel.validate() }) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "checkmark.seal.fill")
+                                    .font(.system(size: 22, weight: .bold))
+                                Text("Validate")
+                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                            }
+                            .frame(width: 80, height: 60)
+                            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.accentColor))
+                            .foregroundColor(.white)
+                            .shadow(color: Color.accentColor.opacity(0.13), radius: 3, x: 0, y: 1)
                         }
-                        .frame(width: 80, height: 60)
-                        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.accentColor))
-                        .foregroundColor(.white)
-                        .shadow(color: Color.accentColor.opacity(0.13), radius: 3, x: 0, y: 1)
-                    }
-                    Button(action: { viewModel.solve() }) {
-                        VStack(spacing: 4) {
-                            Image(systemName: "lightbulb.fill")
-                                .font(.system(size: 22, weight: .bold))
-                            Text("Solve")
-                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        Button(action: { viewModel.solve() }) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "lightbulb.fill")
+                                    .font(.system(size: 22, weight: .bold))
+                                Text("Solve")
+                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                            }
+                            .frame(width: 80, height: 60)
+                            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.purple))
+                            .foregroundColor(.white)
+                            .shadow(color: Color.purple.opacity(0.13), radius: 3, x: 0, y: 1)
                         }
-                        .frame(width: 80, height: 60)
-                        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.purple))
-                        .foregroundColor(.white)
-                        .shadow(color: Color.purple.opacity(0.13), radius: 3, x: 0, y: 1)
-                    }
-                    Button(action: { viewModel.clear() }) {
-                        VStack(spacing: 4) {
-                            Image(systemName: "eraser.fill")
-                                .font(.system(size: 22, weight: .bold))
-                            Text("Clear")
-                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        Button(action: { viewModel.clear() }) {
+                            VStack(spacing: 4) {
+                                Image(systemName: "eraser.fill")
+                                    .font(.system(size: 22, weight: .bold))
+                                Text("Clear")
+                                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                            }
+                            .frame(width: 80, height: 60)
+                            .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.gray.opacity(0.7)))
+                            .foregroundColor(.white)
+                            .shadow(color: Color.gray.opacity(0.13), radius: 3, x: 0, y: 1)
                         }
-                        .frame(width: 80, height: 60)
-                        .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.gray.opacity(0.7)))
-                        .foregroundColor(.white)
-                        .shadow(color: Color.gray.opacity(0.13), radius: 3, x: 0, y: 1)
                     }
-                }
-                .padding(.vertical, 12)
+                    .padding(.vertical, 12)
 
-                // Clues scrollable below the grid
-                ScrollView {
-                    CluesListView(
-                        clues: viewModel.puzzle.clues,
-                        selectedCell: viewModel.selectedCell,
-                        grid: viewModel.puzzle.grid
-                    )
-                    .padding(.horizontal)
-                    .padding(.bottom, 16)
+                    // Clues scrollable below the grid
+                    ScrollView {
+                        CluesListView(
+                            clues: viewModel.puzzle.clues,
+                            selectedCell: viewModel.selectedCell,
+                            grid: viewModel.puzzle.grid
+                        )
+                        .padding(.horizontal)
+                        .padding(.bottom, 16)
+                    }
                 }
             }
             .navigationTitle(viewModel.puzzle.name)
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
             .background(Color(.systemBackground))
+            .onReceive(keyboardWillShow) { _ in isKeyboardVisible = true }
+            .onReceive(keyboardWillHide) { _ in isKeyboardVisible = false }
         }
     }
 } 
