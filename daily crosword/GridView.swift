@@ -6,6 +6,7 @@ struct GridView: View {
     @Binding var selectedCell: (row: Int, col: Int)?
     var onCellTap: (Int, Int) -> Void
     var incorrectCells: Set<[Int]> = []
+    var correctCells: Set<[Int]> = []
     var solvedCells: Set<[Int]> = []
 
     // Compute clue numbers for each cell
@@ -32,9 +33,11 @@ struct GridView: View {
                 HStack(spacing: 2) {
                     ForEach(grid[row].indices, id: \.self) { col in
                         let isBlack = grid[row][col] == "."
+                        let isCorrect = correctCells.contains([row, col])
+                        let isIncorrect = incorrectCells.contains([row, col])
                         ZStack(alignment: .topLeading) {
                             Rectangle()
-                                .fill(isBlack ? Color.gray : Color.white)
+                                .fill(isBlack ? Color.gray : (isCorrect ? Color.green.opacity(0.5) : (isIncorrect ? Color.red.opacity(0.5) : Color.white)))
                                 .frame(width: 32, height: 32)
                                 .border(Color.black, width: 1)
                             if !isBlack {
@@ -52,6 +55,8 @@ struct GridView: View {
                                 }
                             }
                         }
+                        .contentShape(Rectangle())
+                        .onTapGesture { onCellTap(row, col) }
                     }
                 }
             }

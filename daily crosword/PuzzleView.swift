@@ -20,6 +20,7 @@ struct PuzzleView: View {
                         selectedCell: $viewModel.selectedCell,
                         onCellTap: viewModel.selectCell,
                         incorrectCells: viewModel.incorrectCells,
+                        correctCells: viewModel.correctCells,
                         solvedCells: viewModel.solvedCells
                     )
                     .padding()

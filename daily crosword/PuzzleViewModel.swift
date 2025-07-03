@@ -8,6 +8,7 @@ class PuzzleViewModel: ObservableObject {
     @Published var selectedCell: (row: Int, col: Int)?
     @Published var direction: Direction = .across
     @Published var incorrectCells: Set<[Int]> = []
+    @Published var correctCells: Set<[Int]> = []
     @Published var solvedCells: Set<[Int]> = []
 
     enum Direction { case across, down }
@@ -33,10 +34,15 @@ class PuzzleViewModel: ObservableObject {
 
     func validate() {
         incorrectCells = []
+        correctCells = []
         for row in 0..<puzzle.grid.count {
             for col in 0..<puzzle.grid[row].count {
-                if puzzle.grid[row][col] != "." && userGrid[row][col].uppercased() != puzzle.grid[row][col].uppercased() {
-                    incorrectCells.insert([row, col])
+                if puzzle.grid[row][col] != "." {
+                    if userGrid[row][col].uppercased() == puzzle.grid[row][col].uppercased() {
+                        correctCells.insert([row, col])
+                    } else {
+                        incorrectCells.insert([row, col])
+                    }
                 }
             }
         }
@@ -51,6 +57,7 @@ class PuzzleViewModel: ObservableObject {
     func clear() {
         userGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : "" } }
         incorrectCells = []
+        correctCells = []
         solvedCells = []
     }
 } 
