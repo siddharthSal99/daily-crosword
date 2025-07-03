@@ -7,11 +7,45 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Puzzles Solved: \(PuzzleViewModel.solvedPuzzlesCount)")
-                    .font(.headline)
-                    .padding(.top, 12)
-                    .padding(.bottom, 4)
+                // Stylized Title
+                Text("Crossword Puzzles")
+                    .font(.system(size: 38, weight: .black, design: .rounded))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [Color.accentColor, Color.purple, Color.blue],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .shadow(color: .accentColor.opacity(0.2), radius: 4, x: 0, y: 2)
                     .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, 24)
+
+                // Fun Puzzles Solved Capsule
+                HStack(spacing: 8) {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.system(size: 20))
+                    Text("\(PuzzleViewModel.solvedPuzzlesCount)")
+                        .font(.system(size: 22, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                    Text("Solved!")
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white.opacity(0.85))
+                }
+                .padding(.vertical, 8)
+                .padding(.horizontal, 22)
+                .background(
+                    Capsule()
+                        .fill(LinearGradient(
+                            colors: [Color.purple, Color.accentColor],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        ))
+                )
+                .shadow(color: .accentColor.opacity(0.18), radius: 6, x: 0, y: 2)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.bottom, 8)
                 SearchBar(text: $viewModel.searchTerm, onSearch: {
                     Task { await viewModel.fetchPuzzles(reset: true) }
                 })
@@ -35,7 +69,6 @@ struct HomeView: View {
                     }
                 }
                 .listStyle(.plain)
-                .navigationTitle("Crossword Puzzles")
                 .background(
                     NavigationLink(
                         destination: selectedPuzzle.map { puzzle in
