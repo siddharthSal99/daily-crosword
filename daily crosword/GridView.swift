@@ -83,8 +83,6 @@ struct GridCellView: View {
     var onLetterInput: ((Int, Int, String) -> Void)?
     var onBackspace: ((Int, Int) -> Void)?
 
-    @State private var letterAdvanceWorkItem: DispatchWorkItem?
-
     var body: some View {
         ZStack(alignment: .topLeading) {
             Rectangle()
@@ -115,13 +113,7 @@ struct GridCellView: View {
                             text = lastChar
                         }
                         if !lastChar.isEmpty {
-                            // Debounce auto-advance: only move after a short delay with no further input
-                            letterAdvanceWorkItem?.cancel()
-                            let workItem = DispatchWorkItem {
-                                onLetterInput?(row, col, lastChar)
-                            }
-                            letterAdvanceWorkItem = workItem
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: workItem)
+                            onLetterInput?(row, col, lastChar)
                         } else if newValue.isEmpty {
                             // Only move if already empty, do not clear
                             onBackspace?(row, col)
