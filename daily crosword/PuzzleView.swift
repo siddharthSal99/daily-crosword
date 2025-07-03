@@ -103,7 +103,7 @@ struct PuzzleView: View {
                             Text("Validate")
                                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                         }
-                        .frame(width: 60, height: 60)
+                        .frame(width: 80, height: 60)
                         .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.accentColor))
                         .foregroundColor(.white)
                         .shadow(color: Color.accentColor.opacity(0.13), radius: 3, x: 0, y: 1)
@@ -115,7 +115,7 @@ struct PuzzleView: View {
                             Text("Solve")
                                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                         }
-                        .frame(width: 60, height: 60)
+                        .frame(width: 80, height: 60)
                         .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.purple))
                         .foregroundColor(.white)
                         .shadow(color: Color.purple.opacity(0.13), radius: 3, x: 0, y: 1)
@@ -127,7 +127,7 @@ struct PuzzleView: View {
                             Text("Clear")
                                 .font(.system(size: 13, weight: .semibold, design: .rounded))
                         }
-                        .frame(width: 60, height: 60)
+                        .frame(width: 80, height: 60)
                         .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.gray.opacity(0.7)))
                         .foregroundColor(.white)
                         .shadow(color: Color.gray.opacity(0.13), radius: 3, x: 0, y: 1)

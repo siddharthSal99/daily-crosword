@@ -92,7 +92,7 @@ struct GridCellView: View, Equatable {
         ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: 7, style: .continuous)
                 .fill(
-                    isBlack ? Color.purple :
+                    isBlack ? Color(red: 90/255, green: 36/255, blue: 143/255) :
                     (isCorrect ? Color.green.opacity(0.5) :
                     (isIncorrect ? Color.red.opacity(0.5) : Color(.systemGray6)))
                 )
