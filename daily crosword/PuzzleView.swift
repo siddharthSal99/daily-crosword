@@ -34,6 +34,28 @@ struct PuzzleView: View {
                     // No .clipped()
                 }
 
+                // Show clues for selected cell
+                if let selected = viewModel.selectedCell {
+                    let clues = viewModel.cellToClues[selected.row][selected.col]
+                    VStack(alignment: .leading, spacing: 4) {
+                        if let acrossNum = clues.across, let acrossText = viewModel.puzzle.clues.across[safe: acrossNum], let text = acrossText {
+                            Text("Across (\(acrossNum)): \(text)")
+                                .font(.headline)
+                                .foregroundColor(.accentColor)
+                        }
+                        if let downNum = clues.down, let downText = viewModel.puzzle.clues.down[safe: downNum], let text = downText {
+                            Text("Down (\(downNum)): \(text)")
+                                .font(.headline)
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.horizontal)
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+
                 // Action buttons
                 HStack {
                     Button("Validate") { viewModel.validate() }
