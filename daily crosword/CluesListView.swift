@@ -6,17 +6,48 @@ struct CluesListView: View {
     let grid: [[String]]
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Across").bold()
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Across")
+                .font(.title2).bold()
+                .foregroundColor(Color.blue)
+                .padding(.vertical, 6)
+
             ForEach(clues.across.indices, id: \ .self) { i in
                 if let clue = clues.across[i] {
-                    Text("\(i). \(clue)")
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("\(i).")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                            .padding(.top, 2)
+                        Text(clue)
+                            .font(.body)
+                            .foregroundColor(.primary)
+                    }
+                    .padding(.vertical, 4)
                 }
             }
-            Text("Down").bold()
+
+            Spacer(minLength: 24)
+            Divider()
+                .padding(.vertical, 4)
+
+            Text("Down")
+                .font(.title2).bold()
+                .foregroundColor(Color.blue)
+                .padding(.vertical, 6)
+
             ForEach(clues.down.indices, id: \ .self) { i in
                 if let clue = clues.down[i] {
-                    Text("\(i). \(clue)")
+                    HStack(alignment: .top, spacing: 8) {
+                        Text("\(i).")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                            .padding(.top, 2)
+                        Text(clue)
+                            .font(.body)
+                            .foregroundColor(.primary)
+                    }
+                    .padding(.vertical, 4)
                 }
             }
         }
