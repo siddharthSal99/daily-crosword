@@ -61,6 +61,7 @@ struct GridView: View {
                             onLetterInput: onLetterInput,
                             onBackspace: onBackspace
                         )
+                        .equatable()
                     }
                 }
             }
@@ -69,7 +70,7 @@ struct GridView: View {
 }
 
 // MARK: - GridCellView
-struct GridCellView: View {
+struct GridCellView: View, Equatable {
     let row: Int
     let col: Int
     let isBlack: Bool
@@ -82,6 +83,10 @@ struct GridCellView: View {
     var onCellTap: (Int, Int) -> Void
     var onLetterInput: ((Int, Int, String) -> Void)?
     var onBackspace: ((Int, Int) -> Void)?
+
+    static func == (lhs: GridCellView, rhs: GridCellView) -> Bool {
+        lhs.row == rhs.row && lhs.col == rhs.col && lhs.text == rhs.text && lhs.selectedCell == rhs.selectedCell && lhs.isBlack == rhs.isBlack && lhs.isCorrect == rhs.isCorrect && lhs.isIncorrect == rhs.isIncorrect && lhs.clueNumber == rhs.clueNumber
+    }
 
     var body: some View {
         ZStack(alignment: .topLeading) {
