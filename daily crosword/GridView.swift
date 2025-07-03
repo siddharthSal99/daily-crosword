@@ -132,7 +132,8 @@ struct GridCellView: View, Equatable {
                 if let number = clueNumber {
                     Text("\(number)")
                         .font(.system(size: 9))
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.primary)
+                        .shadow(color: Color.black.opacity(0.18), radius: 0.5, x: 0, y: 0.5)
                         .padding(2)
                         .frame(width: 32, height: 32, alignment: .topLeading)
                 }
