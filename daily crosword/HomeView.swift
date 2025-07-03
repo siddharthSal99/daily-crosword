@@ -7,6 +7,11 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             VStack {
+                Text("Puzzles Solved: \(PuzzleViewModel.solvedPuzzlesCount)")
+                    .font(.headline)
+                    .padding(.top, 12)
+                    .padding(.bottom, 4)
+                    .frame(maxWidth: .infinity, alignment: .center)
                 SearchBar(text: $viewModel.searchTerm, onSearch: {
                     Task { await viewModel.fetchPuzzles(reset: true) }
                 })

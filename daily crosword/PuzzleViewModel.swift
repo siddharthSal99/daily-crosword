@@ -17,6 +17,17 @@ class PuzzleViewModel: ObservableObject {
 
     enum Direction { case across, down }
 
+    static let solvedPuzzlesCountKey = "solvedPuzzlesCount"
+
+    static var solvedPuzzlesCount: Int {
+        UserDefaults.standard.integer(forKey: solvedPuzzlesCountKey)
+    }
+
+    private func incrementSolvedPuzzlesCount() {
+        let current = Self.solvedPuzzlesCount
+        UserDefaults.standard.set(current + 1, forKey: Self.solvedPuzzlesCountKey)
+    }
+
     init(puzzle: PuzzleDetail) {
         self.puzzle = puzzle
         let key = "userGrid-\(puzzle.name)"
@@ -93,7 +104,7 @@ class PuzzleViewModel: ObservableObject {
         userGrid[row][col] = letter
     }
 
-    func validate() {
+    func validate(userInitiated: Bool = true) {
         incorrectCells = []
         correctCells = []
         for row in 0..<puzzle.grid.count {
@@ -107,11 +118,14 @@ class PuzzleViewModel: ObservableObject {
                 }
             }
         }
+        if incorrectCells.isEmpty && userInitiated {
+            incrementSolvedPuzzlesCount()
+        }
     }
 
     func solve() {
         userGrid = puzzle.grid
-        validate()
+        validate(userInitiated: false)
         solvedCells = Set((0..<puzzle.grid.count).flatMap { row in (0..<puzzle.grid[row].count).map { [row, $0] } })
     }
 
