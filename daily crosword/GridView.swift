@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 struct CellPosition: Equatable, Hashable {
     let row: Int
@@ -11,6 +12,7 @@ struct GridView: View {
     @Binding var selectedCell: CellPosition?
     var onCellTap: (Int, Int) -> Void
     var onLetterInput: ((Int, Int, String) -> Void)? = nil
+    var onBackspace: ((Int, Int) -> Void)? = nil
     var incorrectCells: Set<[Int]> = []
     var correctCells: Set<[Int]> = []
     var solvedCells: Set<[Int]> = []
@@ -56,7 +58,8 @@ struct GridView: View {
                             selectedCell: $selectedCell,
                             focusedCell: _focusedCell,
                             onCellTap: onCellTap,
-                            onLetterInput: onLetterInput
+                            onLetterInput: onLetterInput,
+                            onBackspace: onBackspace
                         )
                     }
                 }
@@ -78,12 +81,16 @@ struct GridCellView: View {
     @FocusState var focusedCell: CellPosition?
     var onCellTap: (Int, Int) -> Void
     var onLetterInput: ((Int, Int, String) -> Void)?
+    var onBackspace: ((Int, Int) -> Void)?
+
+    @State private var letterAdvanceWorkItem: DispatchWorkItem?
 
     var body: some View {
         ZStack(alignment: .topLeading) {
             Rectangle()
                 .fill(isBlack ? Color.gray : (isCorrect ? Color.green.opacity(0.5) : (isIncorrect ? Color.red.opacity(0.5) : Color.white)))
                 .frame(width: 32, height: 32)
+                .border(Color.black, width: 0.5)
             if !isBlack {
                 let cellFocus = CellPosition(row: row, col: col)
                 TextField("", text: $text)
@@ -107,7 +114,18 @@ struct GridCellView: View {
                         if text != lastChar {
                             text = lastChar
                         }
-                        onLetterInput?(row, col, lastChar)
+                        if !lastChar.isEmpty {
+                            // Debounce auto-advance: only move after a short delay with no further input
+                            letterAdvanceWorkItem?.cancel()
+                            let workItem = DispatchWorkItem {
+                                onLetterInput?(row, col, lastChar)
+                            }
+                            letterAdvanceWorkItem = workItem
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: workItem)
+                        } else if newValue.isEmpty {
+                            // Only move if already empty, do not clear
+                            onBackspace?(row, col)
+                        }
                     }
                     .simultaneousGesture(TapGesture().onEnded { onCellTap(row, col) })
                 if let number = clueNumber {

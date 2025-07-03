@@ -119,6 +119,19 @@ class PuzzleViewModel: ObservableObject {
         }
         return nil
     }
+
+    func previousAcrossCell(from cell: CellPosition) -> CellPosition? {
+        let row = cell.row
+        let col = cell.col
+        var prevCol = col - 1
+        while prevCol >= 0 {
+            if puzzle.grid[row][prevCol] != "." {
+                return CellPosition(row: row, col: prevCol)
+            }
+            prevCol -= 1
+        }
+        return nil
+    }
 }
 
 // Safe array subscript

@@ -25,6 +25,11 @@ struct PuzzleView: View {
                                 viewModel.selectedCell = next
                             }
                         },
+                        onBackspace: { row, col in
+                            if let prev = viewModel.previousAcrossCell(from: CellPosition(row: row, col: col)) {
+                                viewModel.selectedCell = prev
+                            }
+                        },
                         incorrectCells: viewModel.incorrectCells,
                         correctCells: viewModel.correctCells,
                         solvedCells: viewModel.solvedCells
