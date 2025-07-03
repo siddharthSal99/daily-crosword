@@ -51,12 +51,12 @@ struct PuzzleView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         if let acrossNum = clues.across, let acrossText = viewModel.puzzle.clues.across[safe: acrossNum], let text = acrossText {
                             Text("Across (\(acrossNum)): \(text)")
-                                .font(.headline)
+                                .font(viewModel.direction == .across ? .title3.bold() : .headline)
                                 .foregroundColor(.accentColor)
                         }
                         if let downNum = clues.down, let downText = viewModel.puzzle.clues.down[safe: downNum], let text = downText {
                             Text("Down (\(downNum)): \(text)")
-                                .font(.headline)
+                                .font(viewModel.direction == .down ? .title3.bold() : .headline)
                                 .foregroundColor(.accentColor)
                         }
                     }
