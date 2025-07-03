@@ -6,7 +6,7 @@ struct CluesListView: View {
     let grid: [[String]]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 4) {
             Text("Across")
                 .font(.title2).bold()
                 .foregroundColor(Color.blue)

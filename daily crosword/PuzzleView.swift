@@ -20,6 +20,7 @@ struct PuzzleView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.top, 8)
                     .padding(.bottom, 2)
+                    .padding(.horizontal, 16)
                 if !viewModel.puzzle.author.isEmpty {
                     Text("by \(viewModel.puzzle.author)")
                         .font(.system(size: 15, weight: .medium, design: .rounded))
