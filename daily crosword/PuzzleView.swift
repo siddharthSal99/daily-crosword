@@ -12,13 +12,29 @@ struct PuzzleView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
+                // Stylized Puzzle Title
+                Text(viewModel.puzzle.name)
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .foregroundColor(.accentColor)
+                    .shadow(color: .accentColor.opacity(0.12), radius: 2, x: 0, y: 1)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, 8)
+                    .padding(.bottom, 2)
+                if !viewModel.puzzle.author.isEmpty {
+                    Text("by \(viewModel.puzzle.author)")
+                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.bottom, 2)
+                }
+
                 // Make the grid fully scrollable in both directions
                 ScrollView([.horizontal, .vertical]) {
                     GridView(
                         grid: viewModel.puzzle.grid,
                         userGrid: $viewModel.userGrid,
                         selectedCell: $viewModel.selectedCell,
-                        onCellTap: { row, col in viewModel.selectCell(row: row, col: col) },
+                        onCellTap: viewModel.selectCell,
                         onLetterInput: { row, col, letter in
                             viewModel.updateCell(row: row, col: col, letter: letter)
                             if let next = viewModel.nextCell(from: CellPosition(row: row, col: col)) {
@@ -42,7 +58,6 @@ struct PuzzleView: View {
                         maxHeight: .infinity,
                         alignment: .center
                     )
-                    // No .clipped()
                 }
 
                 // Show clues for selected cell
@@ -68,12 +83,36 @@ struct PuzzleView: View {
                 }
 
                 // Action buttons
-                HStack {
-                    Button("Validate") { viewModel.validate() }
-                    Button("Solve") { viewModel.solve() }
-                    Button("Clear") { viewModel.clear() }
+                HStack(spacing: 18) {
+                    Button(action: { viewModel.validate() }) {
+                        Label("Validate", systemImage: "checkmark.seal.fill")
+                            .font(.system(size: 17, weight: .bold, design: .rounded))
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 18)
+                            .background(Capsule().fill(Color.accentColor))
+                            .foregroundColor(.white)
+                            .shadow(color: Color.accentColor.opacity(0.13), radius: 3, x: 0, y: 1)
+                    }
+                    Button(action: { viewModel.solve() }) {
+                        Label("Solve", systemImage: "lightbulb.fill")
+                            .font(.system(size: 17, weight: .bold, design: .rounded))
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 18)
+                            .background(Capsule().fill(Color.purple))
+                            .foregroundColor(.white)
+                            .shadow(color: Color.purple.opacity(0.13), radius: 3, x: 0, y: 1)
+                    }
+                    Button(action: { viewModel.clear() }) {
+                        Label("Clear", systemImage: "eraser.fill")
+                            .font(.system(size: 17, weight: .bold, design: .rounded))
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 18)
+                            .background(Capsule().fill(Color.gray.opacity(0.7)))
+                            .foregroundColor(.white)
+                            .shadow(color: Color.gray.opacity(0.13), radius: 3, x: 0, y: 1)
+                    }
                 }
-                .padding(.vertical, 8)
+                .padding(.vertical, 12)
 
                 // Clues scrollable below the grid
                 ScrollView {
