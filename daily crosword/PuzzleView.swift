@@ -18,7 +18,13 @@ struct PuzzleView: View {
                         grid: viewModel.puzzle.grid,
                         userGrid: $viewModel.userGrid,
                         selectedCell: $viewModel.selectedCell,
-                        onCellTap: viewModel.selectCell,
+                        onCellTap: { row, col in viewModel.selectCell(row: row, col: col) },
+                        onLetterInput: { row, col, letter in
+                            viewModel.updateCell(row: row, col: col, letter: letter)
+                            if let next = viewModel.nextAcrossCell(from: CellPosition(row: row, col: col)) {
+                                viewModel.selectedCell = next
+                            }
+                        },
                         incorrectCells: viewModel.incorrectCells,
                         correctCells: viewModel.correctCells,
                         solvedCells: viewModel.solvedCells

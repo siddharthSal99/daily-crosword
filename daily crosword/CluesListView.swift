@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CluesListView: View {
     let clues: PuzzleClues
-    let selectedCell: (row: Int, col: Int)?
+    let selectedCell: CellPosition?
     let grid: [[String]]
 
     var body: some View {

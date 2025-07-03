@@ -5,7 +5,7 @@ import SwiftUI
 class PuzzleViewModel: ObservableObject {
     let puzzle: PuzzleDetail
     @Published var userGrid: [[String]]
-    @Published var selectedCell: (row: Int, col: Int)?
+    @Published var selectedCell: CellPosition?
     @Published var direction: Direction = .across
     @Published var incorrectCells: Set<[Int]> = []
     @Published var correctCells: Set<[Int]> = []
@@ -58,10 +58,11 @@ class PuzzleViewModel: ObservableObject {
 
     func selectCell(row: Int, col: Int) {
         guard puzzle.grid[row][col] != "." else { return }
-        if let selected = selectedCell, selected.row == row && selected.col == col {
+        let newCell = CellPosition(row: row, col: col)
+        if let selected = selectedCell, selected == newCell {
             direction = (direction == .across) ? .down : .across
         } else {
-            selectedCell = (row, col)
+            selectedCell = newCell
         }
         let clues = cellToClues[row][col]
         if let acrossNum = clues.across, let acrossText = puzzle.clues.across[safe: acrossNum] {
@@ -104,6 +105,19 @@ class PuzzleViewModel: ObservableObject {
         incorrectCells = []
         correctCells = []
         solvedCells = []
+    }
+
+    func nextAcrossCell(from cell: CellPosition) -> CellPosition? {
+        let row = cell.row
+        let col = cell.col
+        var nextCol = col + 1
+        while nextCol < puzzle.grid[row].count {
+            if puzzle.grid[row][nextCol] != "." {
+                return CellPosition(row: row, col: nextCol)
+            }
+            nextCol += 1
+        }
+        return nil
     }
 }
 
