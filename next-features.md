@@ -1,3 +1,4 @@
 - [ ] Reduce typing lag in the crossword grid (improve cell update performance)
 - [ ] When backspace is pressed in an empty cell, move to the previous cell if possible
-- [ ] Disable autocorrect and autocapitalization in grid cell input
+- [ ] Disable autocorrect in grid cell input
+- [ ] Deleted letters should not appear in saved grid state - only save grid when going back to the puzzle list page and when exiting the app.
