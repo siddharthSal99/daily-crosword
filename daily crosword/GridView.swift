@@ -118,14 +118,18 @@ struct GridCellView: View, Equatable {
                         }
                     }
                     .onChange(of: cell.value) { newValue in
-                        let lastChar = newValue.last.map { String($0).uppercased() } ?? ""
-                        if cell.value != lastChar {
-                            cell.value = lastChar
-                        }
-                        if !lastChar.isEmpty {
-                            onLetterInput?(row, col, lastChar)
-                        } else if newValue.isEmpty {
+                        let trimmed = newValue.trimmingCharacters(in: .whitespaces)
+                        if trimmed.isEmpty {
+                            // If the cell is now "empty" (space), move to previous cell
                             onBackspace?(row, col)
+                            cell.value = " " // Always keep a space, never truly empty
+                        } else {
+                            // Only keep the last character, uppercase
+                            let lastChar = String(trimmed.last!).uppercased()
+                            if cell.value != lastChar {
+                                cell.value = lastChar
+                            }
+                            onLetterInput?(row, col, lastChar)
                         }
                     }
                     .simultaneousGesture(TapGesture().onEnded { onCellTap(row, col) })
