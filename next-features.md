@@ -1,4 +1,3 @@
-1. type a word and have it move squares automatically
-2. tap on a square to change the direction of the next square in the clue
-3. backspace deletes squares like a word
-4. keep track of number of puzzles solved
+- [ ] Reduce typing lag in the crossword grid (improve cell update performance)
+- [ ] When backspace is pressed in an empty cell, move to the previous cell if possible
+- [ ] Disable autocorrect and autocapitalization in grid cell input
