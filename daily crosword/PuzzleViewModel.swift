@@ -20,6 +20,7 @@ class PuzzleViewModel: ObservableObject {
     @Published var cellToClues: [[(across: Int?, down: Int?)]] = []
 
     private var cancellables = Set<AnyCancellable>()
+    private let userGridKey: String
 
     enum Direction { case across, down }
 
@@ -36,9 +37,9 @@ class PuzzleViewModel: ObservableObject {
 
     init(puzzle: PuzzleDetail) {
         self.puzzle = puzzle
-        let key = "userGrid-\(puzzle.name)"
+        self.userGridKey = "userGrid-\(puzzle.name)"
         let initialGrid: [[String]]
-        if let saved = UserDefaults.standard.object(forKey: key) as? [[String]], saved.count == puzzle.grid.count {
+        if let saved = UserDefaults.standard.object(forKey: userGridKey) as? [[String]], saved.count == puzzle.grid.count {
             initialGrid = saved
         } else {
             initialGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : "" } }
@@ -46,13 +47,16 @@ class PuzzleViewModel: ObservableObject {
         self.userGrid = initialGrid
         self.userCellGrid = initialGrid.map { row in row.map { GridCellModel($0) } }
         self.cellToClues = PuzzleViewModel.computeCellClueMap(grid: puzzle.grid)
-        // Observe userGrid changes to persist
-        $userGrid
-            .sink { [weak self] newGrid in
-                guard let self = self else { return }
-                UserDefaults.standard.set(newGrid, forKey: key)
+    }
+
+    func saveGridState() {
+        // Sync userCellGrid to userGrid before saving
+        for row in 0..<userCellGrid.count {
+            for col in 0..<userCellGrid[row].count {
+                userGrid[row][col] = userCellGrid[row][col].value
             }
-            .store(in: &cancellables)
+        }
+        UserDefaults.standard.set(userGrid, forKey: userGridKey)
     }
 
     static func computeCellClueMap(grid: [[String]]) -> [[(across: Int?, down: Int?)]] {

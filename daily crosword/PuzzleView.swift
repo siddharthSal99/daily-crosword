@@ -155,6 +155,9 @@ struct PuzzleView: View {
             .navigationTitle(viewModel.puzzle.name)
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
             .background(Color(.systemBackground))
+            .onDisappear {
+                viewModel.saveGridState()
+            }
             .onReceive(keyboardWillShow) { _ in isKeyboardVisible = true }
             .onReceive(keyboardWillHide) { _ in isKeyboardVisible = false }
         }
