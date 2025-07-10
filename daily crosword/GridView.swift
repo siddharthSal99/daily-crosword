@@ -124,8 +124,9 @@ struct GridCellView: View, Equatable {
                             let lastChar = String(trimmed.last!).uppercased()
                             if cell.value != lastChar {
                                 cell.value = lastChar
+                                // Trigger navigation immediately for better responsiveness
+                                onLetterInput?(row, col, lastChar)
                             }
-                            onLetterInput?(row, col, lastChar)
                         }
                     }
                     .simultaneousGesture(TapGesture().onEnded { onCellTap(row, col) })

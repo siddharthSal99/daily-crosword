@@ -23,6 +23,7 @@ struct OptimizedGridView: View {
                     },
                     onLetterInput: { letter in
                         viewModel.updateCell(at: cell.position, with: letter)
+                        // Navigate to next cell immediately
                         if let next = viewModel.nextCell(from: cell.position) {
                             viewModel.selectedCell = next
                         }
@@ -89,16 +90,19 @@ struct OptimizedCellView: View, Equatable {
                         }
                     }
                     .onChange(of: cellValue) { newValue in
+                        // Simplified input handling for better performance
                         let trimmed = newValue.trimmingCharacters(in: .whitespaces)
+                        
                         if trimmed.isEmpty {
                             // Backspace at empty
                             onBackspace()
-                            cellValue = " " // Keep space to prevent empty state
+                            cellValue = " "
                         } else {
-                            // Process letter input
+                            // Process letter input - only trigger if actually changed
                             let lastChar = String(trimmed.last!).uppercased()
                             if cellValue != lastChar {
                                 cellValue = lastChar
+                                // Trigger navigation immediately
                                 onLetterInput(lastChar)
                             }
                         }

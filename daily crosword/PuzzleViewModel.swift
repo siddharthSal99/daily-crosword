@@ -110,6 +110,7 @@ class PuzzleViewModel: ObservableObject {
     func updateCell(row: Int, col: Int, letter: String) {
         guard puzzle.grid[row][col] != "." else { return }
         userGrid[row][col] = letter
+        // Don't validate immediately - let user finish typing
     }
 
     func validate(userInitiated: Bool = true) {

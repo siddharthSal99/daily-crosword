@@ -36,13 +36,22 @@ class OptimizedPuzzleViewModel: ObservableObject {
     }
     
     private func setupBindings() {
-        // Debounce validation to avoid excessive computation
+        // Debounce validation to avoid excessive computation during typing
         $grid
-            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
             .sink { [weak self] _ in
                 self?.validate()
+                // Batch save after validation
+                self?.saveGridState()
             }
             .store(in: &cancellables)
+    }
+    
+    private func saveGridState() {
+        // Save all cells to storage
+        for cell in grid.cells where !cell.isBlack {
+            storage.saveCell(cell.position, value: cell.value, for: puzzle.id)
+        }
     }
     
     // MARK: - Cell Updates (Fine-Grained)
@@ -53,8 +62,8 @@ class OptimizedPuzzleViewModel: ObservableObject {
         // Update only the specific cell
         grid.updateCell(at: position, with: value)
         
-        // Save to storage
-        storage.saveCell(position, value: value, for: puzzle.id)
+        // Don't save to storage on every keystroke - batch saves
+        // storage.saveCell(position, value: value, for: puzzle.id)
         
         // Trigger objectWillChange for this specific update
         objectWillChange.send()
