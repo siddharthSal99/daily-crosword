@@ -44,7 +44,7 @@ struct CrosswordGrid {
                 let cell = CrosswordCell(
                     row: row,
                     col: col,
-                    value: isBlack ? "." : "",
+                    value: isBlack ? "." : " ",
                     isBlack: isBlack
                 )
                 cells.append(cell)

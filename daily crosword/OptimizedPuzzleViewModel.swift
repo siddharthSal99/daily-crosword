@@ -27,7 +27,9 @@ class OptimizedPuzzleViewModel: ObservableObject {
         if let savedGrid = storage.loadGrid(for: puzzle.id) {
             self.grid = CrosswordGrid(grid: savedGrid)
         } else {
-            self.grid = CrosswordGrid(grid: puzzle.grid)
+            // Initialize with spaces instead of empty strings
+            let initialGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : " " } }
+            self.grid = CrosswordGrid(grid: initialGrid)
         }
         
         setupBindings()
@@ -181,9 +183,9 @@ class OptimizedPuzzleViewModel: ObservableObject {
     }
     
     func clear() {
-        // Clear all non-black cells
+        // Clear all non-black cells with spaces
         for cell in grid.cells where !cell.isBlack {
-            grid.updateCell(at: cell.position, with: "")
+            grid.updateCell(at: cell.position, with: " ")
         }
         
         // Save the cleared state

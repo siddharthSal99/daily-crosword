@@ -19,15 +19,11 @@ class PuzzleAPI {
         ]
         urlComponents.queryItems = queryItems
         let url = urlComponents.url!
-        print("[CROSSWORD-API] Fetching puzzles from URL: \(url)")
         let (data, _) = try await URLSession.shared.data(from: url)
-        print("[CROSSWORD-API] Received data: \(data.count) bytes")
         do {
             let response = try JSONDecoder().decode(PuzzleListResponse.self, from: data)
-            print("[CROSSWORD-API] Decoded \(response.puzzles.count) puzzles")
             return response.puzzles
         } catch {
-            print("[CROSSWORD-API] Decoding error: \(error)")
             throw error
         }
     }

@@ -76,10 +76,10 @@ struct OptimizedCellView: View, Equatable {
                     .background(Color.clear)
                     .focused($isFocused)
                     .onAppear {
-                        cellValue = cell.value.isEmpty ? " " : cell.value
+                        cellValue = cell.value
                     }
                     .onChange(of: cell.value) { newValue in
-                        cellValue = newValue.isEmpty ? " " : newValue
+                        cellValue = newValue
                     }
                     .onChange(of: isSelected) { selected in
                         if selected {

@@ -42,7 +42,7 @@ class PuzzleViewModel: ObservableObject {
         if let saved = UserDefaults.standard.object(forKey: userGridKey) as? [[String]], saved.count == puzzle.grid.count {
             initialGrid = saved
         } else {
-            initialGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : "" } }
+            initialGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : " " } }
         }
         self.userGrid = initialGrid
         self.userCellGrid = initialGrid.map { row in row.map { GridCellModel($0) } }
@@ -104,12 +104,7 @@ class PuzzleViewModel: ObservableObject {
             selectedCell = newCell
         }
         let clues = cellToClues[row][col]
-        if let acrossNum = clues.across, let acrossText = puzzle.clues.across[safe: acrossNum] {
-            print("Across clue (\(acrossNum)): \(acrossText ?? "")")
-        }
-        if let downNum = clues.down, let downText = puzzle.clues.down[safe: downNum] {
-            print("Down clue (\(downNum)): \(downText ?? "")")
-        }
+        // Clue information is available but not printed for performance
     }
 
     func updateCell(row: Int, col: Int, letter: String) {
@@ -143,7 +138,7 @@ class PuzzleViewModel: ObservableObject {
     }
 
     func clear() {
-        userGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : "" } }
+        userGrid = puzzle.grid.map { $0.map { $0 == "." ? "." : " " } }
         incorrectCells = []
         correctCells = []
         solvedCells = []
