@@ -1,10 +1,6 @@
 import SwiftUI
 import Combine
 
-struct CellPosition: Equatable, Hashable {
-    let row: Int
-    let col: Int
-}
 
 struct GridView: View {
     let grid: [[String]]
